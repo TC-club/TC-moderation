@@ -18,13 +18,13 @@ Then, add the code from [MuteDM](https://github.com/TC-club/TC-moderation/blob/m
 > Step 3
 Again. Whilst still being in **Moderation** go to `Kick`
 Now I'm assuming this is right (the roles), make sure the **left** side looks like the image below  
-![image3](https://user-images.githubusercontent.com/83547071/116820088-11001300-ab6b-11eb-9e0c-098b21964154.png)
+![image3](https://user-images.githubusercontent.com/83547071/116820088-11001300-ab6b-11eb-9e0c-098b21964154.png)  
 Then, add the code from [KickDM](https://github.com/TC-club/TC-moderation/blob/main/moderation/kickDM.cc.go) to where it says `Kick DM`
 
 > Step 4
 Yep. You guessed it. Head over to the `Ban` tab
 Now, same old same old. Make sure your settings mirror the image below. 
-![image4](https://user-images.githubusercontent.com/83547071/116820162-72c07d00-ab6b-11eb-9cfb-4fc7ca29e579.png)
+![image4](https://user-images.githubusercontent.com/83547071/116820162-72c07d00-ab6b-11eb-9cfb-4fc7ca29e579.png)  
 Then add the code from [BanDM](https://github.com/TC-club/TC-moderation/blob/main/moderation/banDM.cc.go) to where it says `Ban DM`
 
 # Final steps
