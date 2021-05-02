@@ -1,6 +1,6 @@
 {{/*
         Made by Maverick Wolf (549820835230253060)
-        Modified by Ranger (779096217853886504)
+        Modified by Ranger (765316548516380732)
 
     Trigger Type: `Warn DM`
 ©️ Dynamic 2021
@@ -8,7 +8,7 @@ MIT License
 */}}
 
 {{/* Configuration values start */}}
-{{$LogChannel := 838432051094880306}}
+{{$LogChannel := 784132358085017604}}
 {{/* Configuration values end */}}
 
 {{/* Only edit below if you know what you're doing (: rawr */}}
@@ -24,18 +24,14 @@ MIT License
 	{{$icon = printf "https://cdn.discordapp.com/icons/%d/%s.%s" .Guild.ID .Guild.Icon $ext}}
 {{end}}
 
-{{$dm := 1}}
+{{$dm := 1}}{{/* change to 0 if you don't wanna DM the offender about the moderation action*/}}
 
-{{if $dm}}
-    {{$MuteDM := cembed
-            "author" (sdict "icon_url" (.User.AvatarURL "1024") "name" (print .User.String " (ID " .User.ID ")"))
-            "description" (print "**Server:** " .Guild.Name "\n**Action:** `Mute`\n**Duration : **" .HumanDuration "\n**Reason: **" (joinStr " " (split (reReplace `Automoderator:` .Reason "<:Bot:787563190221406259>:") "\n")))
-            "thumbnail" (sdict "url" $icon)
-            "footer" (sdict "text" " ")
-            "timestamp" currentTime
-            "color" 3553599
-            }}
-    {{sendDM $MuteDM}}
+{{$bannedWords := ""}}
+
+{{if (dbGet 0 "banned words")}}
+    {{$bannedWords = reReplace `\A` (toString (dbGet 0 "banned words").Value) "("}}
+    {{$bannedWords = reReplace `\z` $bannedWords ")"}}
+    {{$bannedWords = reReplace `\s` $bannedWords "|"}}
 {{end}}
 
 {{$case_number := (toInt (dbIncr 77 "cv" 1))}}
@@ -52,21 +48,44 @@ MIT License
 {{$id := .User.ID}}
 {{$channel := $LogChannel}}
 
+{{$reason := ""}}
+{{if .Reason}}
+    {{if and (reFind "(?i)word blacklist" .Reason) (dbGet 0 "banned words")}}
+        {{$reason = (print "Sending  word ||" (reFind $bannedWords (lower .Message.Content)) "|| is forbidden")}}
+        {{else if or (not (reFind "(?i)word blacklist" .Reason)) (not (dbGet 0 "banned words"))}}
+        {{if reFind `Automoderator:` .Reason}}
+            {{$reason = (reReplace `Triggered rule:\s` (reReplace `Automoderator:\s` .Reason "") "")}}
+            {{else}}
+            {{$reason = .Reason}}
+        {{end}}
+    {{end}}
+{{end}}
+
+{{if $dm}}
+    {{$WarnDM := cembed
+            "author" (sdict "icon_url" (.User.AvatarURL "1024") "name" (print .User.String " (ID " .User.ID ")"))
+            "description" (print "**Server:** " .Guild.Name "\n**Action:** `Warn`\n**Reason: **" $reason)
+            "thumbnail" (sdict "url" $icon)
+            "footer" (sdict "text" " ")
+            "timestamp" currentTime
+            "color" 3553599
+            }}
+    {{sendDM $WarnDM}}
+{{end}}
+
 {{$x := sendMessageRetID $LogChannel (cembed
-            "author" (sdict "icon_url" (.Author.AvatarURL "1024") "name" (print .Author.String " (ID " .Author.ID ")"))
-            "description" (print "<:TextChannel:800978104105304065> **Case number** " $case_number "\n<:Management:788937280508657694> **Who:** " .User.Mention " `(ID " .User.ID ")`\n<:Metadata:788937280508657664> **Action:** `Mute`\n<:Assetlibrary:788937280554926091> **Channel:** <#" .Channel.ID ">\n<:Manifest:788937280579698728> **Reason:** " (joinStr " " (split (reReplace `Automoderator:` .Reason "<:Bot:787563190221406259>:") "\n")) "\n:clock12: **Time:** " ( joinStr " " (( currentTime.Add 0).Format "15:04 GMT")))
+            "author" (sdict "icon_url" (.Author.AvatarURL "1024") "name" (print .Author.String " (ID " .Author.ID ")")) "description" (print "<:TextChannel:800978104105304065> **Case number:** " $case_number "\n<:Management:788937280508657694> **Who:** " .User.Mention " `(ID " .User.ID ")`\n<:Metadata:788937280508657664> **Action:** `Warn`\n<:Assetlibrary:788937280554926091> **Channel:** <#" .Channel.ID ">\n<:Manifest:788937280579698728> **Reason:** " $reason "\n<:Edit:800978104272683038> **Message Logs:** [Click Here](" (execAdmin "logs") ")\n:clock12: **Time:** " ( joinStr " " (( currentTime.Add 0).Format "15:04 GMT")))
             "thumbnail" (sdict "url" (.User.AvatarURL "256"))
-            "footer" (sdict "text" (print "Duration: " .HumanDuration ))
-            "color" 5731006
+            "color" 16556627
             )}}
 
-{{dbSet $case_number "viewcase" (sdict "name" .Author.Username "warnname" .User.Username "avatar" (.Author.AvatarURL "512") "reason" .Reason "userid" $id "action" (.ModAction.Prefix) "channel" $channel "msgid" $x "userdiscrim" .User.Discriminator)}}{{/*for viewcase*/}}
-{{dbSet $case_number $id (print "Case # **" $case_number "**\t\t**| " $title " Reason:** `" .Reason "`")}}{{/*for per user case viewing*/}}
+{{dbSet $case_number "viewcase" (sdict "name" .Author.Username "warnname" .User.Username "avatar" (.Author.AvatarURL "512") "reason" $reason "userid" $id "action" (.ModAction.Prefix) "channel" $channel "msgid" $x "userdiscrim" .User.Discriminator)}}{{/*for viewcase*/}}
+{{dbSet $case_number $id (print "Case # **" $case_number "**\t\t**| " $title " Reason:** `" $reason "`")}}{{/*for per user case viewing*/}}
 {{dbSet $case_number "userid" (str $id)}}{{/* for delete case*/}}
 
 {{$Response := sendMessageRetID nil (cembed
-            "author" (sdict "icon_url" (.User.AvatarURL "1024") "name" (print "Case type: Mute"))
-            "description" (print .Author.Mention " Has successfully muted " .User.Mention " for " .HumanDuration ":thumbsup:")
+            "author" (sdict "icon_url" (.User.AvatarURL "1024") "name" (print "Case type: Warning"))
+            "description" (print .Author.Mention " Has successfully warned " .User.Mention " :thumbsup:")
             "footer" (sdict "text" " ")
             "timestamp" currentTime
             "color" 3553599
