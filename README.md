@@ -5,7 +5,7 @@ So
 > Step 1
 Go to [Moderation](https://yagpdb.xyz/manage/794236519543734273/moderation) **>** Then, `Warnings`
 And make sure the **left** side looks like the image below  
-![image1](https://user-images.githubusercontent.com/83547071/116819849-e9f51180-ab69-11eb-8627-466bfcc25d75.png)
+![image1](https://user-images.githubusercontent.com/83547071/116819849-e9f51180-ab69-11eb-8627-466bfcc25d75.png)  
 Then, add the code from [WarnDM](https://github.com/TC-club/TC-moderation/blob/main/moderation/warnDM.cc.go) to where it says `WarnDM`
 
 > Step 2
