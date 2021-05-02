@@ -7,11 +7,12 @@ Go to [Moderation](https://yagpdb.xyz/manage/794236519543734273/moderation) **>*
 And make sure the **left** side looks like the image below  
 ![image1](https://user-images.githubusercontent.com/83547071/116819849-e9f51180-ab69-11eb-8627-466bfcc25d75.png)  
 Then, add the code from [WarnDM](https://github.com/TC-club/TC-moderation/blob/main/moderation/warnDM.cc.go) to where it says `WarnDM`
-
+  
+   
 > Step 2
 While you're still in **Moderation** go to `Mute`
 Make sure the **left** side looks like the image below (Make sure to **ENABLE** `Mute/Unmute`  
-![image2](https://user-images.githubusercontent.com/83547071/116819961-81f2fb00-ab6a-11eb-9d11-5ae05514e37c.png)
+![image2](https://user-images.githubusercontent.com/83547071/116819961-81f2fb00-ab6a-11eb-9d11-5ae05514e37c.png)  
 Then, add the code from [MuteDM](https://github.com/TC-club/TC-moderation/blob/main/moderation/muteDM.cc.go) & [UnmuteDM](https://github.com/TC-club/TC-moderation/blob/main/moderation/unmuteDM.cc.go) to where it says `Mute DM` & `Unmute DM`
 
 > Step 3
